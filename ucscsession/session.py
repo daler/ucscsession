@@ -125,7 +125,7 @@ class _UCSCSession(object):
         if isinstance(track, pybedtools.BedTool):
             if trackline:
                 track = track.saveas(trackline=trackline)
-                track = track.fn
+            track = track.fn
         else:
             if trackline:
                 fout = open(pybedtools.BedTool._tmp(), 'w')
@@ -189,11 +189,12 @@ class _UCSCSession(object):
             position = '{chrom}:{start}-{stop}'.format(position)
         return position
 
+if __name__ == "__main__":
+    u = UCSCSession()
+    for fn in ['a.bed', 'b.bed']:
+        x = pybedtools.example_bedtool(fn)\
+            .saveas(trackline='track name=%s' % fn)
+        r = u.upload_track(x)
 
-u = UCSCSession()
-for fn in ['a.bed', 'b.bed']:
-    x = pybedtools.example_bedtool(fn)\
-        .saveas(trackline='track name=%s' % fn)
-    r = u.upload_track(x)
-
-print "PDF file at %s" % u.pdf(position='chr19:1-5000')
+    print "PDF file at %s" % u.pdf(position='chr1:1-2000', filename='example.pdf')
+    u.show()
