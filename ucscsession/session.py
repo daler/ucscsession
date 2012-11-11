@@ -262,6 +262,45 @@ class _UCSCSession(object):
             self.tracks_url, data={'hgt.in%s' % level: True})
         return response
 
+class TrackException(Exception):
+    pass
+
+
+class Track(object):
+    def __init__(self, cell,  ucsc_session):
+        """
+        `cell` is a <td> tag
+        """
+        self._cell = cell
+        self.ucsc_session = ucsc_session
+        a = cell('a')
+        select = cell('select')
+        if (len(a) != 1) or (len(select) != 1):
+            raise TrackException
+        select, = select
+        a, = a
+        try:
+            self.visibility = self._cell('option', selected=True)[0].text
+            self._visibility_options = [i.text for i in self._cell('option')]
+            self.title = a['title']
+            self.id = select['name']
+            self.label = a.text.strip()
+            self.url = a['href']
+        except (KeyError, AttributeError):
+            raise TrackException
+
+    def set_visibility(self, visibility):
+        if visibility not in self._visibility_options:
+            raise ValueError('visibility "%s" not supported by this track; '
+                             'options are %s' % self._visibility_options)
+        response = self.ucsc_session.track_visibility(self.id, visibility)
+        return response
+
+    def __repr__(self):
+        return '<Track "{id}" ({label}) [{visibility}]>'\
+            .format(**self.__dict__)
+
+
 if __name__ == "__main__":
     u = UCSCSession()
     for fn in ['a.bed', 'b.bed']:
