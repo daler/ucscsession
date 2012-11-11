@@ -36,6 +36,7 @@ def UCSCSession():
 class _UCSCSession(object):
     def __init__(self):
         self._session = None
+        self._tracks = None
         self._mirror = settings.mirror
         self.cart = self.cart_info()
 
@@ -178,6 +179,7 @@ class _UCSCSession(object):
         payload = {}
         payload.update({'position': self._position_string(position)})
         response = self.session.get(self.tracks_url, data=payload)
+        self._reset_tracks(response)
         webbrowser.open(response.url)
         return response
 
@@ -262,6 +264,17 @@ class _UCSCSession(object):
             self.tracks_url, data={'hgt.in%s' % level: True})
         return response
 
+    @property
+    def tracks(self):
+        if self._tracks is None:
+            self._reset_tracks()
+        return self._tracks
+
+    def _reset_tracks(self, response=None):
+        if not response:
+            response = self.session.get(self.tracks_url)
+        self._tracks = dict(
+            (i.id, i) for i in tracks_from_response(response, self))
 class TrackException(Exception):
     pass
 
@@ -299,6 +312,19 @@ class Track(object):
     def __repr__(self):
         return '<Track "{id}" ({label}) [{visibility}]>'\
             .format(**self.__dict__)
+
+
+def tracks_from_response(response, ucsc_session):
+    soup = BeautifulSoup(response.text)
+    cells = soup('td')
+    tracks = []
+    for cell in cells:
+        try:
+            track = Track(cell, ucsc_session)
+        except TrackException:
+            continue
+        tracks.append(track)
+    return tracks
 
 
 if __name__ == "__main__":
