@@ -5,6 +5,7 @@ import os
 from bs4 import BeautifulSoup
 import helpers
 import logging
+import getpass
 
 # maintain different loggers for different functionality.
 logging.basicConfig(level=logging.INFO)
@@ -103,6 +104,14 @@ class _UCSCSession(object):
     @property
     def hub_url(self):
         return os.path.join(self.url, 'hgHubConnect')
+
+    @property
+    def login_url(self):
+        return os.path.join(self.url, 'hgLogin')
+
+    @property
+    def session_url(self):
+        return os.path.join(self.url, 'hgSession')
 
     # -------------------------------------------------------------------------
 
@@ -205,6 +214,27 @@ class _UCSCSession(object):
         if not isinstance(position, basestring):
             position = '{chrom}:{start}-{stop}'.format(position)
         return position
+
+    def login(self, username, password=None):
+        """
+        Log in using username and password
+
+        If `password` is None, then prompt for it at the terminal.
+        """
+        if password is None:
+            password = getpass.getpass(prompt='\nPassword for %s: ' % self.url)
+        hgsid_logger.debug('pre-login hgsid: %s' % self.hgsid)
+        response = self.session.post(self.login_url, data={
+            'hgLogin_username': username,
+            'hgLogin_password': password,
+            'action': 'hgLogin',
+            'hgsid': None})
+        self.update_session(['hgLogin_username'])
+        settings.hgsid = helpers.hgsid_from_response(response)
+        hgsid_logger.debug('post-login hgsid: %s' % self.hgsid)
+        response = self.session.get(self.session_url)
+        return response
+
 
 if __name__ == "__main__":
     u = UCSCSession()
