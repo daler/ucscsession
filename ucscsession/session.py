@@ -125,6 +125,14 @@ class _UCSCSession(object):
             d[k] = v
         return d
 
+    def update_session(self, keys=None):
+        cart_info = self.cart_info()
+        if keys is None:
+            self.session.params.update(cart_info)
+        else:
+            for key in keys:
+                self.session.params[key] = cart_info[key]
+
     def upload_track(self, track, trackline=None):
         """
         Uploads a track, providing an optional track line.
