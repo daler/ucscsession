@@ -6,9 +6,11 @@ from bs4 import BeautifulSoup
 import helpers
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
+# maintain different loggers for different functionality.
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
+hgsid_logger = logging.getLogger(__name__ + '(hgsid)')
+hgsid_logger.setLevel(logging.DEBUG)
 _ucsc_session_instance = [None]
 
 import settings
@@ -53,7 +55,7 @@ class _UCSCSession(object):
         Creates a new session if none exists, or if the mirror has changed.
         """
         if (settings.mirror != self._mirror) or (self._session is None):
-            logger.debug('init session')
+            logger.info('initilizing session')
             self._mirror = settings.mirror
             self._session = requests.session(params=dict(hgsid=self.hgsid))
         return self._session
@@ -65,10 +67,10 @@ class _UCSCSession(object):
         otherwise return the existing one.
         """
         if (settings.hgsid is None) or (self._mirror != settings.mirror):
-            logger.debug('new hgsid: %s' % settings.hgsid)
+            hgsid_logger.debug('new hgsid: %s' % settings.hgsid)
             settings.hgsid = helpers.hgsid_from_response(
                 requests.get(self.gateway_url))
-        logger.debug('hgsid=%s' % settings.hgsid)
+        hgsid_logger.debug('hgsid=%s' % settings.hgsid)
         return settings.hgsid
 
     # -------------------------------------------------------------------------
