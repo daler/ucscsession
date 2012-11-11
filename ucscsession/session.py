@@ -275,6 +275,34 @@ class _UCSCSession(object):
             response = self.session.get(self.tracks_url)
         self._tracks = dict(
             (i.id, i) for i in tracks_from_response(response, self))
+
+    def set_track_visibilities(self, tracks, visibilities):
+        """
+        Set (possibly many) track visibilities at once.
+
+        Each `track` is either a Track object or a string track ID, perhaps
+        discovered via UCSCSession.track_names
+
+        Each `visibility` is one of "hide", "dense", "squish", "pack", "full",
+        "show", as specified by each track.
+
+        Note that it is possible to call set_visibility() on each track
+        separately, but this would trigger a separate request each time.
+        Instead, this method allows you to set many visibilities with a single
+        request.
+        """
+        data = {}
+        for track, visibility in zip(tracks, visibilities):
+            if isinstance(track, basestring):
+                track = self.tracks[track]
+            if visibility not in track._visibility_options:
+                raise ValueError(
+                    'visibility must be one of %s' % track._visibility_options)
+            data[track.id] = visibility
+        response = self.session.get(self.tracks_url, data=data)
+        return response
+
+
 class TrackException(Exception):
     pass
 
