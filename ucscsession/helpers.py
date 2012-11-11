@@ -1,5 +1,12 @@
 import os
+import webbrowser
 from bs4 import BeautifulSoup
+
+def view_response(response):
+    fout = open('tmp.html', 'w')
+    fout.write(response.content)
+    fout.close()
+    webbrowser.open('tmp.html')
 
 
 def hgsid_from_response(r):
