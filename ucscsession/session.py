@@ -215,6 +215,11 @@ class _UCSCSession(object):
             position = '{chrom}:{start}-{stop}'.format(position)
         return position
 
+    def position(self, position):
+        return self.session.get(
+            self.tracks_url, data={'position':
+                                   self._position_string(position)})
+
     def login(self, username, password=None):
         """
         Log in using username and password
@@ -235,6 +240,27 @@ class _UCSCSession(object):
         response = self.session.get(self.session_url)
         return response
 
+    def zoom_out(self, level=1):
+        """
+        Zoom the current view out by `level`.
+
+        `level` is 1, 2, or 3 for 1.5x, 3x, and 10x respectively.
+        """
+        assert 1 <= level <= 3, 'zoom level must be 1, 2, or 3'
+        response = self.session.post(
+            self.tracks_url, data={'hgt.out%s' % level: True})
+        return response
+
+    def zoom_in(self, level=1):
+        """
+        Zoom the current view in by `level`
+
+        `level` is 1, 2, or 3 for 1.5x, 3x, and 10x respectively.
+        """
+        assert 1 <= level <= 3, 'zoom level must be 1, 2, or 3'
+        response = self.session.post(
+            self.tracks_url, data={'hgt.in%s' % level: True})
+        return response
 
 if __name__ == "__main__":
     u = UCSCSession()
