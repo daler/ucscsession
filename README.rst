@@ -19,6 +19,11 @@ This package is still under active development, but currently it can:
   the coordinates of the view)
 * download PDFs of screenshots for the current view (or a new set of provided
   coordinates)
+* inspect currently loaded tracks
+* make bulk track visibility changes or change visibility one-by-one
+* zoom in and out from the current coordinates
+* log in to an account and use tracks loaded in that session
+
 
 Example usage::
 
@@ -38,6 +43,22 @@ Example usage::
     print "PDF file at %s" % u.pdf(position='chr1:1-2000')
 
     # Display in a web browser
+    u.show()
+
+    # set the visibility of all tracks with "bed" in the label to "squish"
+    tracks = []
+    visibilities = []
+    for k, v in u.tracks.items():
+        if 'bed' in v.label:
+            tracks.append(k)
+            visibilities.append('squish')
+    u.set_track_visibilities(tracks, visibilities)
+
+    # Zoom out a little
+    u.zoom_out()
+
+    # Show the new view in a new browser tab -- zoomed out, and with the custom
+    # tracks set to "pack" visibility
     u.show()
 
 Copyright 2012 Ryan Dale; BSD 2-clause license.
