@@ -115,7 +115,14 @@ class _UCSCSession(object):
         logger.debug('accessing cart')
         r = self.session.get(self.cart_url)
         b = BeautifulSoup(r.text)
-        d = dict([i.split(None, 1) for i in b.pre.text.splitlines(False)])
+        d = {}
+        for i in b.pre.text.splitlines(False):
+            items = i.split(None, 1)
+            if len(items) == 1:
+                k, v = items[0], None
+            else:
+                k, v = items
+            d[k] = v
         return d
 
     def upload_track(self, track, trackline=None):
