@@ -15,7 +15,7 @@ Info about ``ucscsession``.
 setup(
         name="ucscsession",
         version=version,
-        install_requires=[],
+        install_requires=['requests', 'beautifulsoup4'],
         packages=['ucscsession',
                   'ucscsession.test',
                   'ucscsession.test.data',
