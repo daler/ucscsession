@@ -5,7 +5,7 @@ takes inspiration from the R package ``rtracklayer`` but tries to do things in
 a more Pythonic manner.
 
 The eventual goal is to integrate this with `pybedtools
-<https://github.com/daler/pybedtools>`_ `trackhub
+<https://github.com/daler/pybedtools>`_, `trackhub
 <https://github.com/daler/trackhub>`_, and possibly `cruzdb
 <https://github.com/brentp/cruzdb>`_ for full programmatic access to the Genome
 Browser for uploading tracks and track hubs, modifying settings, and
@@ -13,16 +13,18 @@ downloading PDF screenshots.
 
 This package is still under active development, but currently it can:
 
-* connect to a session on any mirror of the UCSC genome browser
-* upload custom tracks
-* view current Genome Browser session in a web browser (optionally specifying
+* Connect to a session on any mirror of the UCSC genome browser
+* Upload custom tracks
+* View current Genome Browser session in a web browser (optionally specifying
   the coordinates of the view)
-* download PDFs of screenshots for the current view (or a new set of provided
+* Download PDFs of screenshots for the current view (or a new set of provided
   coordinates)
-* inspect currently loaded tracks
-* make bulk track visibility changes or change visibility one-by-one
-* zoom in and out from the current coordinates
-* log in to an account and use tracks loaded in that session
+* Inspect currently loaded tracks
+* Make bulk track visibility changes or change visibility one-by-one
+* Zoom in and out from the current coordinates
+* Log in to an account and use tracks loaded in that session
+* Change any setting on any track, thanks to the `mechanize
+  <http://wwwsearch.sourceforge.net/mechanize/>`_
 
 
 Example usage::
@@ -61,4 +63,8 @@ Example usage::
     # tracks set to "pack" visibility
     u.show()
 
+
 Copyright 2012 Ryan Dale; BSD 2-clause license.
+
+.. include:: LICENSE
+
