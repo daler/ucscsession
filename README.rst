@@ -24,47 +24,10 @@ This package is still under active development, but currently it can:
 * Zoom in and out from the current coordinates
 * Log in to an account and use tracks loaded in that session
 * Change any setting on any track, thanks to the `mechanize
-  <http://wwwsearch.sourceforge.net/mechanize/>`_
+  <http://wwwsearch.sourceforge.net/mechanize/>`_ package.
 
 
-Example usage::
-
-    import ucscsession
-    import pybedtools
-
-    # Initialize a session
-    u = ucscsession.UCSCSession()
-
-    # Upload some example BED files
-    for fn in ['a.bed', 'b.bed']:
-        x = pybedtools.example_bedtool(fn)\
-            .saveas(trackline='track name=%s' % fn)
-        r = u.upload_track(x)
-
-    # Save a PDF at a particular position
-    print "PDF file at %s" % u.pdf(position='chr1:1-2000')
-
-    # Display in a web browser
-    u.show()
-
-    # set the visibility of all tracks with "bed" in the label to "squish"
-    tracks = []
-    visibilities = []
-    for k, v in u.tracks.items():
-        if 'bed' in v.label:
-            tracks.append(k)
-            visibilities.append('squish')
-    u.set_track_visibilities(tracks, visibilities)
-
-    # Zoom out a little
-    u.zoom_out()
-
-    # Show the new view in a new browser tab -- zoomed out, and with the custom
-    # tracks set to "pack" visibility
-    u.show()
-
+See the full documentation at `http://packages.python.org/ucscsession`_, and
+`<scripts/ucscsession_example.py>`_ for example usage.
 
 Copyright 2012 Ryan Dale; BSD 2-clause license.
-
-.. include:: LICENSE
-
