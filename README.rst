@@ -28,6 +28,6 @@ This package is still under active development, but currently it can:
 
 
 See the full documentation at `<http://packages.python.org/ucscsession>`_, and
-`<ucscsession/blob/master/ucscsession/scripts/ucscsession_example.py>`_ for example usage.
+`ucscsession/scripts/ucscsession_example.py <ucscsession/blob/master/ucscsession/scripts/ucscsession_example.py>`_ for example usage.
 
 Copyright 2012 Ryan Dale; BSD 2-clause license.
