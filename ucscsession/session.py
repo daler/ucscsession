@@ -277,15 +277,23 @@ class _UCSCSession(object):
         self._tracks = dict(
             (i.id, i) for i in tracks_from_response(response, self))
 
-    def set_track_visibilities(self, tracks, visibilities):
+    def set_track_visibilities(self, items):
         """
         Set (possibly many) track visibilities at once.
 
-        Each `track` is either a Track object or a string track ID, perhaps
-        discovered via UCSCSession.track_names
+        Each item is a (track, visibility) tuple, where `track` is either
+        a Track object or a string track ID, perhaps discovered via
+        UCSCSession.track_names, and `visibility` is one of "hide", "dense",
+        "squish", "pack", "full", "show", as specified by each track.
 
-        Each `visibility` is one of "hide", "dense", "squish", "pack", "full",
-        "show", as specified by each track.
+        e.g.,
+
+        set_track_visibilities(
+            [
+                ('mrna', 'dense'),
+                ('intronEst', 'hide'),
+            ]
+        )
 
         Note that it is possible to call set_visibility() on each track
         separately, but this would trigger a separate request each time.
@@ -293,7 +301,7 @@ class _UCSCSession(object):
         request.
         """
         data = {}
-        for track, visibility in zip(tracks, visibilities):
+        for track, visibility in items:
             if isinstance(track, basestring):
                 track = self.tracks[track]
             if visibility not in track._visibility_options:
