@@ -37,28 +37,57 @@ class TrackException(Exception):
 
 
 class Track(object):
-    def __init__(self, cell,  ucsc_session):
+    def __init__(self, td,  ucsc_session):
         """
-        `cell` is a <td> tag
+        `td` is a <td> tag parsed with BeautifulSoup
         """
-        self._cell = cell
+        self._td = td
         self.ucsc_session = ucsc_session
-        a = cell('a')
-        select = cell('select')
-        if (len(a) != 1) or (len(select) != 1):
-            raise TrackException
-        select, = select
-        a, = a
-        try:
-            self.visibility = self._cell('option', selected=True)[0].text
-            self._visibility_options = [i.text for i in self._cell('option')]
-            self.title = a['title']
-            self.id = select['name']
-            self.label = a.text.strip()
-            self.url = os.path.join(ucsc_session.url, a['href'])
-        except (KeyError, AttributeError):
-            raise TrackException
 
+        # Filter out <td> cells containing known sentinel text indicating it
+        # doesn't represent a track
+        td_str = str(td)
+        if 'toggleButton' in td_str:
+            raise TrackException(
+                '<td> contains a group toggle button:\n %s' % td_str)
+        if len(td('b')) > 0:
+            raise TrackException(
+                '<td> looks like a group title:\n %s' % td_str)
+        if 'hgt.refresh' in td_str:
+            raise TrackException(
+                '<td> looks like a refresh button:\n %s' % td_str)
+        if '[No data' in td_str:
+            raise TrackException(
+                '<td> is reporting no data for this chrom:\n %s' % td_str)
+
+        # Extract the config page URL for this track.
+        #
+        # Note: for liftedOver or ENCODE tracks, there's another <a> tag for
+        # the little icon thing, which will be the first <a> tag in the table
+        # cell.  Otherwise, there should be just one <a> tag.
+        a = td('a')
+        if (len(a) == 0):
+            raise TrackException('<td> has no <a> tag:\n %s' % td_str)
+        a = a[-1]
+        self.url = os.path.join(ucsc_session.url, a['href'])
+
+        # Extract the <select> and current visibility
+        select = td('select')
+        if len(select) != 1:
+            raise TrackException('<td> has no <select> tag:\n %s' % td_str)
+        select = select[0]
+        self.visibility = self._td('option', selected=True)[0].text
+        self._visibility_options = [i.text for i in self._td('option')]
+
+        # Extract out some other stuff useful for introspection
+        self.id = select['name']
+        self.label = a.text.strip()
+
+        # Sometimes there's no title; in that case set it to the label.
+        try:
+            self.title = a['title']
+        except KeyError:
+            self.title = self.label
         self._config = None
 
     def __repr__(self):
