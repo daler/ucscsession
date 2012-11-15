@@ -66,5 +66,5 @@ Example usage::
 
 Copyright 2012 Ryan Dale; BSD 2-clause license.
 
-.. include:: LICENSE
+.. include:: ucscsession/blob/master/LICENSE
 
