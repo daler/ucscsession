@@ -1,6 +1,9 @@
 import os
 from bs4 import BeautifulSoup
 import mechanize
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 # API goal:
@@ -21,13 +24,12 @@ class ConfigPage(object):
         data = {}
         for form in self.forms:
             text_data = form.click_request_data()[1]
-
             data.update(dict([i.split('=') for i in text_data.split('&')]))
-            response = self.ucsc_session.session.get(
-                self.url, data=data)
-            self.ucsc_session._tracks = None
-            return response
-
+        logger.debug('data = ' + str(data))
+        response = self.ucsc_session.session.get(
+            self.url, params=data)
+        self.ucsc_session._reset_tracks()
+        return response
 
 
 class TrackException(Exception):
