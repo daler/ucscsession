@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import helpers
 import logging
 import getpass
+from tracks import tracks_from_response
 
 # maintain different loggers for different functionality.
 logging.basicConfig(level=logging.INFO)
@@ -303,8 +304,6 @@ class _UCSCSession(object):
         return response
 
 
-
-
 if __name__ == "__main__":
     u = UCSCSession()
     for fn in ['a.bed', 'b.bed']:
@@ -312,5 +311,6 @@ if __name__ == "__main__":
             .saveas(trackline='track name=%s' % fn)
         r = u.upload_track(x)
 
-    print "PDF file at %s" % u.pdf(position='chr1:1-2000', filename='example.pdf')
+    print "PDF file at %s" \
+        % u.pdf(position='chr1:1-2000', filename='example.pdf')
     u.show()

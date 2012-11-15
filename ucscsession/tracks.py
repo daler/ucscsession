@@ -79,7 +79,6 @@ class Track(object):
         response = self.ucsc_session.track_visibility(self.id, visibility)
         return response
 
-    
 
 def tracks_from_response(response, ucsc_session):
     soup = BeautifulSoup(response.text)
