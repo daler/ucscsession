@@ -27,7 +27,7 @@ This package is still under active development, but currently it can:
   <http://wwwsearch.sourceforge.net/mechanize/>`_ package.
 
 
-See the full documentation at `http://packages.python.org/ucscsession`_, and
-`<scripts/ucscsession_example.py>`_ for example usage.
+See the full documentation at `<http://packages.python.org/ucscsession>`_, and
+`<ucscsession/scripts/ucscsession_example.py>`_ for example usage.
 
 Copyright 2012 Ryan Dale; BSD 2-clause license.
