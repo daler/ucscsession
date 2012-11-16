@@ -15,6 +15,7 @@ hgsid_logger = logging.getLogger(__name__ + '(hgsid)')
 hgsid_logger.setLevel(logging.DEBUG)
 _ucsc_session_instance = [None]
 
+
 import settings
 
 
@@ -40,6 +41,7 @@ class _UCSCSession(object):
         self._tracks = None
         self._mirror = settings.mirror
         self.cart = self.cart_info()
+        self.autoraise = True
 
     def update_cart(self, **kwargs):
         """
