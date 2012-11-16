@@ -68,7 +68,7 @@ class _UCSCSession(object):
         Creates a new session if none exists, or if the mirror has changed.
         """
         if (settings.mirror != self._mirror) or (self._session is None):
-            logger.info('initilizing session')
+            logger.debug('initializing session')
             self._mirror = settings.mirror
             self._session = requests.session(params=dict(hgsid=self.hgsid))
         return self._session
@@ -148,6 +148,7 @@ class _UCSCSession(object):
         return d
 
     def update_session(self, keys=None):
+        logger.debug('Updating session with cart info')
         cart_info = self.cart_info()
         if keys is None:
             self.session.params.update(cart_info)
@@ -173,6 +174,7 @@ class _UCSCSession(object):
                 fout.close()
                 track = fout.name
 
+        logger.debug('Uploading track from file %s' % track)
         return self.session.post(
             self.custom_url,
             files={'hgt.customFile': open(track)}
