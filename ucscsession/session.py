@@ -225,7 +225,7 @@ class _UCSCSession(object):
         a position string in the form "chrom:start-stop"
         """
         if not position:
-            position = self.cart_info()['position']
+            return None
         if not isinstance(position, basestring):
             position = '{chrom}:{start}-{stop}'.format(position)
         return position
