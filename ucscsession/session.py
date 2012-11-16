@@ -186,9 +186,11 @@ class _UCSCSession(object):
 
         If `position` is None, then just use the last position.
         """
-        payload = {}
-        payload.update({'position': self._position_string(position)})
-        response = self.session.get(self.tracks_url, data=payload)
+        self.set_position(position)
+        response = self.request_tracks()
+        webbrowser.open(response.url, autoraise=self.autoraise)
+        return response
+
     def request_tracks(self, data=None):
         if data is None:
             data = {}
