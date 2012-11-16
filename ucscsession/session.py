@@ -180,8 +180,11 @@ class _UCSCSession(object):
         payload = {}
         payload.update({'position': self._position_string(position)})
         response = self.session.get(self.tracks_url, data=payload)
+    def request_tracks(self, data=None):
+        if data is None:
+            data = {}
+        response = self.session.get(self.tracks_url, data=data)
         self._reset_tracks(response)
-        webbrowser.open(response.url)
         return response
 
     def pdf(self, position=None, filename=None):
@@ -250,8 +253,7 @@ class _UCSCSession(object):
         `level` is 1, 2, or 3 for 1.5x, 3x, and 10x respectively.
         """
         assert 1 <= level <= 3, 'zoom level must be 1, 2, or 3'
-        response = self.session.post(
-            self.tracks_url, data={'hgt.out%s' % level: True})
+        response = self.request_tracks(data={'hgt.out%s' % level: True})
         return response
 
     def zoom_in(self, level=1):
@@ -261,8 +263,7 @@ class _UCSCSession(object):
         `level` is 1, 2, or 3 for 1.5x, 3x, and 10x respectively.
         """
         assert 1 <= level <= 3, 'zoom level must be 1, 2, or 3'
-        response = self.session.post(
-            self.tracks_url, data={'hgt.in%s' % level: True})
+        response = self.request_tracks(data={'hgt.in%s' % level: True})
         return response
 
     @property
