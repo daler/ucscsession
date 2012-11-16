@@ -51,6 +51,12 @@ class _UCSCSession(object):
 
         """
         self.session.get(self.cart_url, data=kwargs)
+    def change_genome(self, assembly):
+        """
+        Change the genome assembly to anything supported by the mirror you're
+        connected to
+        """
+        return self.update_cart(db=assembly)
 
     @property
     def session(self):
