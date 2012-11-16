@@ -1,3 +1,4 @@
+import time
 import pybedtools
 import webbrowser
 import requests
@@ -36,6 +37,9 @@ def UCSCSession():
 
 
 class _UCSCSession(object):
+
+    _SLEEP = 2
+
     def __init__(self):
         self._session = None
         self._tracks = None
@@ -193,6 +197,7 @@ class _UCSCSession(object):
         self.set_position(position)
         response = self.request_tracks()
         webbrowser.open(response.url, autoraise=self.autoraise)
+        time.sleep(self._SLEEP)
         return response
 
     def request_tracks(self, data=None):
@@ -215,6 +220,7 @@ class _UCSCSession(object):
         payload = {'hgt.psOutput': 'on'}
         payload.update(position=self._position_string(position))
         response = self.session.post(self.tracks_url, data=payload)
+        time.sleep(self._SLEEP)
         link = helpers.pdf_link(response)
         logger.debug('PDF link: %s' % link)
         if filename is None:
