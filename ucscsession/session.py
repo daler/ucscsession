@@ -55,7 +55,7 @@ class _UCSCSession(object):
         response = self.session.get(self.cart_url, data=kwargs)
         return response
 
-    def change_genome(self, assembly):
+    def set_genome(self, assembly):
         """
         Change the genome assembly to anything supported by the mirror you're
         connected to
