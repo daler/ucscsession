@@ -50,7 +50,9 @@ class _UCSCSession(object):
         update_cart(db="dm3")
 
         """
-        self.session.get(self.cart_url, data=kwargs)
+        response = self.session.get(self.cart_url, data=kwargs)
+        return response
+
     def change_genome(self, assembly):
         """
         Change the genome assembly to anything supported by the mirror you're
@@ -123,15 +125,16 @@ class _UCSCSession(object):
 
     # -------------------------------------------------------------------------
 
-    def cart_info(self):
+    def cart_info(self, response=None):
         """
         Return a dictionary of the current cart
 
         (which has all the CGI vars in it)
         """
         logger.debug('accessing cart')
-        r = self.session.get(self.cart_url)
-        b = BeautifulSoup(r.text)
+        if response is None:
+            response = self.session.get(self.cart_url)
+        b = BeautifulSoup(response.text)
         d = {}
         for i in b.pre.text.splitlines(False):
             items = i.split(None, 1)
