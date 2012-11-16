@@ -233,7 +233,7 @@ class _UCSCSession(object):
         if not position:
             return None
         if not isinstance(position, basestring):
-            position = '{chrom}:{start}-{stop}'.format(position)
+            position = '{p.chrom}:{p.start}-{p.stop}'.format(p=position)
         return position
 
     def set_position(self, position):
