@@ -230,10 +230,8 @@ class _UCSCSession(object):
             position = '{chrom}:{start}-{stop}'.format(position)
         return position
 
-    def position(self, position):
-        return self.session.get(
-            self.tracks_url, data={'position':
-                                   self._position_string(position)})
+    def set_position(self, position):
+        return self.update_cart(position=self._position_string(position))
 
     def login(self, username, password=None):
         """
