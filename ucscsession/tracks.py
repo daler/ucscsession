@@ -31,6 +31,17 @@ class ConfigPage(object):
         self.ucsc_session._reset_tracks()
         return response
 
+    def print_forms(self):
+        for i, form in enumerate(self.forms):
+            print "forms[{0}]".format(i)
+            for control in form.controls:
+                try:
+                    if control.type in ['hidden', 'submit']:
+                        continue
+                except (KeyError, AttributeError):
+                    pass
+                print '   {0}'.format(control)
+
 
 class TrackException(Exception):
     pass
@@ -93,6 +104,7 @@ class Track(object):
     def __repr__(self):
         return '<Track "{id}" ({label}) [{visibility}]>'\
             .format(**self.__dict__)
+
 
     @property
     def config(self):
