@@ -74,7 +74,8 @@ class _UCSCSession(object):
         if (settings.mirror != self._mirror) or (self._session is None):
             logger.debug('initializing session')
             self._mirror = settings.mirror
-            self._session = requests.session(params=dict(hgsid=self.hgsid))
+            self._session = requests.session()
+            self._session.params=dict(hgsid=self.hgsid)
         return self._session
 
     @property
