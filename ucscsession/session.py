@@ -175,7 +175,7 @@ class _UCSCSession(object):
             if trackline:
                 fout = open(pybedtools.BedTool._tmp(), 'w')
                 fout.write(trackline.rstrip() + '\n')
-                fout.write(open(track))
+                fout.write(open(track).read())
                 fout.close()
                 track = fout.name
 
