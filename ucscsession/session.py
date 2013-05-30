@@ -180,10 +180,19 @@ class _UCSCSession(object):
                 track = fout.name
 
         logger.debug('Uploading track from file %s' % track)
-        return self.session.post(
+        response = self.session.post(
             self.custom_url,
             files={'hgt.customFile': open(track)}
         )
+
+        # mis-formatted files will fail silently, so we need to check the html
+        # response for an error.
+        soup = BeautifulSoup(response.content)
+        for p in soup.find_all('p'):
+            for s in p.find_all('span'):
+                if s.text == 'Error':
+                    raise ValueError(repr(p.text))
+        return response
 
     def show(self, position=None):
         """
