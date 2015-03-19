@@ -275,6 +275,15 @@ class _UCSCSession(object):
         response = self.session.get(self.session_url)
         return response
 
+
+    def load_settings(self, settings_filename):
+        response = self.session.post(
+            self.tracks_url,
+            files={'hgS_loadLocalFileName': open(settings_filename)}
+        )
+        return response
+
+
     def zoom_out(self, level=1):
         """
         Zoom the current view out by `level`.
